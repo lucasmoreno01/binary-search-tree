@@ -1,4 +1,5 @@
 from linked_list import List_node, LinkedList
+from double_linked_list import DLL_node, DoubleLinkedList
 
 # TODO: Apagar comentarios
 # TODO: Checkar a operação com if/else ou mach/case
@@ -20,6 +21,7 @@ class BinarySearchTree:
     def __init__(self):
         self.root = None
         self.linked_list = LinkedList()
+        self.d_linked_list = DoubleLinkedList()
 
     def insert(self, value):
         parent = None
@@ -167,17 +169,17 @@ class BinarySearchTree:
         return hleft + 1
 
     def travessal(self, value):
-        # if self.root is not None:
-        #     current = self.root
-        #     while current:
-        #         self.path_list.insert(current.data)
-        #         if value < current.data:
-        #             current = current.left
-        #         elif value > current.data:
-        #             current = current.right
-        #         else:
-        #             self.path_list.print_list()
-        #             return current
+        if self.root is not None:
+            current = self.root
+            while current:
+                self.d_linked_list.insert_on_head(current.data)
+                if value < current.data:
+                    current = current.left
+                elif value > current.data:
+                    current = current.right
+                else:
+                    self.d_linked_list.print_list()
+                    return current
 
         return None
 
@@ -208,18 +210,15 @@ bst.search("Alice")
 # bst.remove("Lucas")
 
 print('---------------------------------------')
-# print("Root:", bst.root.data)
-
-print('---------------------------------------')
 
 bst.showInorderTree('L', 'X')
 
-print('\n ---------------------------------------')
+print('\n ------------------------------------')
 
 bst.showLevel(2)
 
-print('\n ---------------------------------------')
+print('\n ------------------------------------')
 bst.show_most_consulted()
 
-print('\n ---------------------------------------')
+print('\n ------------------------------------')
 bst.travessal("Alice")
