@@ -8,16 +8,36 @@ class DLL_node:
 class DoubleLinkedList:
     def __init__(self):
         self.head = None
-        self.tailer = None
+        self.rear = None
 
-    def insert_on_head(self, value):
+    def insert_in_order(self, value):
         node = DLL_node(value)
         if self.head is None:
+            # Lista está vazia
             self.head = node
+            self.rear = node
         else:
-            node.next = self.head
-            self.head.prev = node
-            self.head = node
+            current = self.head
+            while current is not None and current.data < value:
+                current = current.next
+            if current is None:
+                # Inserir no final da lista
+                self.rear.next = node
+                node.prev = self.rear
+                self.rear = node
+            elif current == self.head:
+                # Inserir no início da lista
+                node.next = self.head
+                self.head.prev = node
+                self.head = node
+            else:
+                # Inserir no meio da lista
+                previous = current.prev
+                previous.next = node
+                node.prev = previous
+                node.next = current
+                current.prev = node
+
 
     def print_list(self):
         pointer = self.head

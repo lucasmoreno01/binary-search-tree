@@ -28,17 +28,23 @@ class BinarySearchTree:
         current = self.root
         while current:
             parent = current
-            if value < current.data:
+            if value == current.data:
+                print(f"palavra ja existente: {value}")
+                return
+            elif value < current.data:
                 current = current.left
             else:
                 current = current.right
 
         if parent is None:
             self.root = Node(value)
+            print(f"palavra inserida: {value}")
         elif value < parent.data:
             parent.left = Node(value)
+            print(f"palavra inserida: {value}")
         else:
             parent.right = Node(value)
+            print(f"palavra inserida: {value}")
 
     def search(self, value):
         if self.root is not None:
@@ -121,7 +127,7 @@ class BinarySearchTree:
 
     def showInorderTree(self, l1, l2):
         if self.root is not None:
-            print('palavras em ordem:', end=" ")
+            print('palavras em ordem:')
             self._inorderTree(self.root, l1, l2)
         else:
             print("lista vazia")
@@ -132,19 +138,20 @@ class BinarySearchTree:
             self._inorderTree(node.left, l1, l2)
 
         if node.data[0] >= l1 and node.data[0] <= l2:
-            print(node.data, end=" ")
+            print(node.data)
         if node.right:
             self._inorderTree(node.right, l1, l2)
 
         return node
 
     def showLevel(self, level):
-        if level > self._height():
-            print(f'nao ha nos com nivel: {level}')
-            return
         if self.root is not None:
-            print(f'palavra no nivel: {level}')
-            self._getTreeLevel(self.root, level)
+            if level > self._height():
+                print(f'nao ha nos com nivel: {level}')
+                return
+            if self.root is not None:
+                print(f'palavra no nivel: {level}')
+                self._getTreeLevel(self.root, level)
 
     def _getTreeLevel(self, node, level):
 
@@ -156,47 +163,63 @@ class BinarySearchTree:
         self._getTreeLevel(node.right, level - 1)
 
     def _height(self, node=None):
-        if node is None:
-            node = self.root
-        hleft = 0
-        hright = 0
-        if node.left:
-            hleft = self._height(node.left)
-        if node.right:
-            hright = self._height(node.right)
-        if hright > hleft:
-            return hright + 1
-        return hleft + 1
+        if self.root is not None:
+            if node is None:
+                node = self.root
+            hleft = 0
+            hright = 0
+            if node.left:
+                hleft = self._height(node.left)
+            if node.right:
+                hright = self._height(node.right)
+            if hright > hleft:
+                return hright + 1
+            return hleft + 1
 
     def travessal(self, value):
         if self.root is not None:
             current = self.root
             while current:
-                self.d_linked_list.insert_on_head(current.data)
+                self.d_linked_list.insert_in_order(current.data)
                 if value < current.data:
                     current = current.left
                 elif value > current.data:
                     current = current.right
                 else:
-                    self.d_linked_list.print_list()
-                    return current
-
+                    break
+            self.d_linked_list.print_list()
+            return current
         return None
+
+    def showTree(self, node):
+        if self.root is None:
+            print('lista vazia')
+        if node is None:
+            return node
+        left_value = node.left.data if node.left is not None else "nill"
+        right_value = node.right.data if node.right is not None else "nill"
+        print(f"palavra: {node.data} freq: {node.searched} fesq: {
+              left_value} fdir: {right_value}")
+        self.showTree(node.left)
+        self.showTree(node.right)
 
 
 bst = BinarySearchTree()
+
 bst.root = Node("Rodrigo")
 
 bst.insert("Lucas")
-bst.insert("Zé")
+bst.insert("Lucas") # palavra ja existente
+bst.insert("Ze")
 bst.insert("Alice")
 bst.insert("Xuxa")
+bst.insert("Ziraldo")
+bst.insert("Lucca")
 
 
 print(bst.root.data)
 print(bst.root.left.data)
 print(bst.root.right.data)
-
 print('---------------------------------------')
 bst.search("Lucas")
 bst.search("Lucas")
@@ -205,6 +228,7 @@ bst.search("Alice")
 bst.search("Alice")
 bst.search("Lucas")
 bst.search("Alice")
+bst.search("Joel") #palavra inexistente
 
 
 # bst.remove("Lucas")
@@ -222,3 +246,6 @@ bst.show_most_consulted()
 
 print('\n ------------------------------------')
 bst.travessal("Alice")
+
+print('\n ------------------------------------')
+bst.showTree(bst.root)
