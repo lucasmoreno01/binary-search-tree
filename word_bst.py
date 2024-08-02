@@ -1,13 +1,6 @@
 from linked_list import List_node, LinkedList
 from double_linked_list import DLL_node, DoubleLinkedList
 
-# TODO: Apagar comentarios
-# TODO: Checkar a operação com if/else ou mach/case
-# TODO: Em caso de arvore vazia
-# TODO: Em caso de item único
-
-# Python 3.12.3
-
 
 class Node:
     def __init__(self, data=None):
@@ -21,6 +14,7 @@ class BinarySearchTree:
     def __init__(self):
         self.root = None
         self.linked_list = LinkedList()
+        self.order_list = LinkedList()
         self.d_linked_list = DoubleLinkedList()
 
     def insert(self, value):
@@ -76,12 +70,25 @@ class BinarySearchTree:
 
         return node
 
+    def _treeTravessal(self, node):
+        if node is None:
+            return node
+        self._treeTravessal(node.left)
+        self._treeTravessal(node.right)
+
     def show_most_consulted(self):
+
         if self.root is not None:
-            print('palavras mais consultadas:')
-            self.linked_list.print_list()
+            if self.linked_list.head is not None:
+                print('palavras mais consultadas:')
+                self.linked_list.print_list()
+
+            else:
+                self._treeTravessal(self.root)
             print(f'numero de acessos: {
-                  self.linked_list.most_searched_value}')
+                      self.linked_list.most_searched_value}')
+            return
+        print("arvore vazia")
 
     def remove(self, value, node="ROOT"):
         if node == "ROOT":
@@ -122,27 +129,33 @@ class BinarySearchTree:
                     successor_parent.left = successor.right
                 else:
                     successor_parent.right = successor.right
+                print(f"palavra removida: {value}")
+
+                # Remove word from the most consulted list
+                self.linked_list.remove(value)
 
         return node
 
     def showInorderTree(self, l1, l2):
+        self.order_list.clear()  # Clear the list before populating it again
         if self.root is not None:
-            print('palavras em ordem:')
             self._inorderTree(self.root, l1, l2)
+            if self.order_list.head is not None:
+                print('palavras em ordem:')
+                self.order_list.print_list()
+            else:
+                print("lista vazia")
         else:
-            print("lista vazia")
+            print("arvore vazia")
 
     def _inorderTree(self, node, l1, l2):
-
         if node.left:
             self._inorderTree(node.left, l1, l2)
 
         if node.data[0] >= l1 and node.data[0] <= l2:
-            print(node.data)
+            self.order_list.insert(node.data)
         if node.right:
             self._inorderTree(node.right, l1, l2)
-
-        return node
 
     def showLevel(self, level):
         if self.root is not None:
@@ -154,10 +167,10 @@ class BinarySearchTree:
                 self._getTreeLevel(self.root, level)
 
     def _getTreeLevel(self, node, level):
-
         if level == 1:
-            print(node.data)
-            return node
+            if node is not None:
+                print(node.data)
+                return node
 
         self._getTreeLevel(node.left, level - 1)
         self._getTreeLevel(node.right, level - 1)
@@ -179,21 +192,37 @@ class BinarySearchTree:
     def travessal(self, value):
         if self.root is not None:
             current = self.root
+            found = False
             while current:
-                self.d_linked_list.insert_in_order(current.data)
                 if value < current.data:
                     current = current.left
                 elif value > current.data:
                     current = current.right
                 else:
+                    found = True
                     break
-            self.d_linked_list.print_list()
-            return current
+
+            if found:
+                current = self.root
+                while current:
+                    self.d_linked_list.insert_in_order(current.data)
+                    if value < current.data:
+                        current = current.left
+                    elif value > current.data:
+                        current = current.right
+                    else:
+                        break
+
+                print("palavras no caminho")
+                self.d_linked_list.print_list()
+                return current
+
+        print(f"palavra nao existente {value}")
         return None
 
     def showTree(self, node):
         if self.root is None:
-            print('lista vazia')
+            print('arvore vazia')
         if node is None:
             return node
         left_value = node.left.data if node.left is not None else "nill"
@@ -202,50 +231,3 @@ class BinarySearchTree:
               left_value} fdir: {right_value}")
         self.showTree(node.left)
         self.showTree(node.right)
-
-
-bst = BinarySearchTree()
-
-bst.root = Node("Rodrigo")
-
-bst.insert("Lucas")
-bst.insert("Lucas") # palavra ja existente
-bst.insert("Ze")
-bst.insert("Alice")
-bst.insert("Xuxa")
-bst.insert("Ziraldo")
-bst.insert("Lucca")
-
-
-print(bst.root.data)
-print(bst.root.left.data)
-print(bst.root.right.data)
-print('---------------------------------------')
-bst.search("Lucas")
-bst.search("Lucas")
-
-bst.search("Alice")
-bst.search("Alice")
-bst.search("Lucas")
-bst.search("Alice")
-bst.search("Joel") #palavra inexistente
-
-
-# bst.remove("Lucas")
-
-print('---------------------------------------')
-
-bst.showInorderTree('L', 'X')
-
-print('\n ------------------------------------')
-
-bst.showLevel(2)
-
-print('\n ------------------------------------')
-bst.show_most_consulted()
-
-print('\n ------------------------------------')
-bst.travessal("Alice")
-
-print('\n ------------------------------------')
-bst.showTree(bst.root)
