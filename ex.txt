@@ -1,5 +1,0 @@
-palavra: lucas freq: 3 fesq: gabriela fdir: nil
-
-
-- pre ordem 
-- imprimir o valor, consulted, esquerda, direita
