@@ -28,14 +28,4 @@ class LinkedList:
             print(pointer.data)
             pointer = pointer.next
 
-    def clear(self):
-        self.head = None
-        self.size = 0
-        self.most_searched_value = 0
 
-# l = LinkedList()
-# l.insert("kaka")
-# l.insert("kake")
-
-# # Imprimir todos os elementos da lista
-# l.print_list()

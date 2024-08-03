@@ -14,7 +14,6 @@ class BinarySearchTree:
     def __init__(self):
         self.root = None
         self.linked_list = LinkedList()
-        self.order_list = LinkedList()
         self.d_linked_list = DoubleLinkedList()
 
     def insert(self, value):
@@ -52,50 +51,56 @@ class BinarySearchTree:
                     current.searched += 1
                     print(f"palavra existente: {
                           current.data} {current.searched}")
-                    self._q_search_increment(current)
                     return current
 
         print(f"palavra inexistente: {value}")
         return None
 
-    def _q_search_increment(self, node):
-        if node.searched == self.linked_list.most_searched_value or self.linked_list.head is None:
-            self.linked_list.insert(node.data)
-        elif node.searched > self.linked_list.most_searched_value and self.linked_list.head is not None:
-            if self.linked_list.head.next:
-                self.linked_list.head = node
-                self.linked_list.head.next = None
-                self.linked_list.size = 1
-            self.linked_list.most_searched_value = node.searched
 
-        return node
-
-    def _treeTravessal(self, node):
+    def _get_most_consulted_value(self, node):
         if node is None:
-            return node
-        self._treeTravessal(node.left)
-        self._treeTravessal(node.right)
+            return 0  # returning 0 for comparison purposes
+
+        left_count = self._get_most_consulted_value(node.left)
+        right_count = self._get_most_consulted_value(node.right)
+
+        if node.searched >= left_count and node.searched >= right_count:
+            return node.searched
+        elif left_count >= right_count:
+            return left_count
+        else:
+            return right_count
+
+    def _print_most_consulted_values(self, nconsult, node):
+        if node is None:
+            return
+
+        if node.left:
+            self._print_most_consulted_values(nconsult, node.left)
+
+        if node.searched == nconsult:
+            print(node.data)
+
+        if node.right:
+            self._print_most_consulted_values(nconsult, node.right)
 
     def show_most_consulted(self):
-
-        if self.root is not None:
-            if self.linked_list.head is not None:
-                print('palavras mais consultadas:')
-                self.linked_list.print_list()
-
-            else:
-                self._treeTravessal(self.root)
-            print(f'numero de acessos: {
-                      self.linked_list.most_searched_value}')
+        if self.root is None:
+            print('arvore vazia')
             return
-        print("arvore vazia")
+
+        count = self._get_most_consulted_value(self.root)
+        print("palavras mais consultadas:")
+        self._print_most_consulted_values(count, self.root)
+        print(f"numero de acessos: {count}")
+        
 
     def remove(self, value, node="ROOT"):
         if node == "ROOT":
             node = self.root
 
         if node is None:
-            print("palavra nao encontrada")
+            print(f"palavra inexistente: {value}")
             return node
 
         if value < node.data:
@@ -131,18 +136,15 @@ class BinarySearchTree:
                     successor_parent.right = successor.right
                 print(f"palavra removida: {value}")
 
-                # Remove word from the most consulted list
-                self.linked_list.remove(value)
-
         return node
 
     def showInorderTree(self, l1, l2):
-        self.order_list.clear()  # Clear the list before populating it again
+        self.linked_list.head = None
         if self.root is not None:
             self._inorderTree(self.root, l1, l2)
-            if self.order_list.head is not None:
+            if self.linked_list.head is not None:
                 print('palavras em ordem:')
-                self.order_list.print_list()
+                self.linked_list.print_list()
             else:
                 print("lista vazia")
         else:
@@ -153,7 +155,7 @@ class BinarySearchTree:
             self._inorderTree(node.left, l1, l2)
 
         if node.data[0] >= l1 and node.data[0] <= l2:
-            self.order_list.insert(node.data)
+            self.linked_list.insert(node.data)
         if node.right:
             self._inorderTree(node.right, l1, l2)
 
@@ -162,15 +164,18 @@ class BinarySearchTree:
             if level > self._height():
                 print(f'nao ha nos com nivel: {level}')
                 return
-            if self.root is not None:
-                print(f'palavra no nivel: {level}')
-                self._getTreeLevel(self.root, level)
+            print(f'palavra no nivel: {level}')
+            self._getTreeLevel(self.root, level)
+            return
+        print("arvore vazia")
 
     def _getTreeLevel(self, node, level):
+        if node is None:
+            return
+
         if level == 1:
-            if node is not None:
-                print(node.data)
-                return node
+            print(node.data)
+            return
 
         self._getTreeLevel(node.left, level - 1)
         self._getTreeLevel(node.right, level - 1)
@@ -190,6 +195,7 @@ class BinarySearchTree:
             return hleft + 1
 
     def travessal(self, value):
+        self.d_linked_list.head = None
         if self.root is not None:
             current = self.root
             found = False
@@ -203,6 +209,7 @@ class BinarySearchTree:
                     break
 
             if found:
+
                 current = self.root
                 while current:
                     self.d_linked_list.insert_in_order(current.data)
@@ -220,7 +227,7 @@ class BinarySearchTree:
         print(f"palavra nao existente {value}")
         return None
 
-    def showTree(self, node):
+    def print_tree(self, node):
         if self.root is None:
             print('arvore vazia')
         if node is None:
@@ -229,5 +236,5 @@ class BinarySearchTree:
         right_value = node.right.data if node.right is not None else "nill"
         print(f"palavra: {node.data} freq: {node.searched} fesq: {
               left_value} fdir: {right_value}")
-        self.showTree(node.left)
-        self.showTree(node.right)
+        self.print_tree(node.left)
+        self.print_tree(node.right)
