@@ -1,6 +1,7 @@
-from binary_search_tree import BinarySearchTree
 
 # versão do python: 3.12.3
+
+from binary_search_tree import BinarySearchTree
 
 bst = BinarySearchTree()
 

@@ -1,4 +1,3 @@
-# lista que armazena os valores consultados
 
 class List_node:
     def __init__(self, data=None):

@@ -49,17 +49,15 @@ class BinarySearchTree:
                     current = current.right
                 else:
                     current.searched += 1
-                    print(f"palavra existente: {
-                          current.data} {current.searched}")
+                    print(f"palavra existente: {current.data} {current.searched}")
                     return current
 
         print(f"palavra inexistente: {value}")
         return None
 
-
     def _get_most_consulted_value(self, node):
         if node is None:
-            return 0  # returning 0 for comparison purposes
+            return 0  
 
         left_count = self._get_most_consulted_value(node.left)
         right_count = self._get_most_consulted_value(node.right)
@@ -93,7 +91,6 @@ class BinarySearchTree:
         print("palavras mais consultadas:")
         self._print_most_consulted_values(count, self.root)
         print(f"numero de acessos: {count}")
-        
 
     def remove(self, value, node="ROOT"):
         if node == "ROOT":
@@ -101,7 +98,7 @@ class BinarySearchTree:
 
         if node is None:
             print(f"palavra inexistente: {value}")
-            return node
+            return None
 
         if value < node.data:
             node.left = self.remove(value, node.left)
@@ -119,17 +116,16 @@ class BinarySearchTree:
                     self.root = node.left
                 return node.left
             else:
-                # Encontrar o menor nó na subárvore direita (sucessor)
+                
                 successor_parent = node
                 successor = node.right
                 while successor.left is not None:
                     successor_parent = successor
                     successor = successor.left
 
-                # Substituir os dados do nó pelo sucessor
                 node.data = successor.data
+                node.searched = successor.searched
 
-                # Remover o sucessor
                 if successor_parent.left == successor:
                     successor_parent.left = successor.right
                 else:
@@ -145,29 +141,31 @@ class BinarySearchTree:
             if self.linked_list.head is not None:
                 print('palavras em ordem:')
                 self.linked_list.print_list()
+                return
             else:
                 print("lista vazia")
+                return
         else:
-            print("arvore vazia")
+            print("lista vazia")
+            return
 
     def _inorderTree(self, node, l1, l2):
         if node.left:
             self._inorderTree(node.left, l1, l2)
 
-        if node.data[0] >= l1 and node.data[0] <= l2:
+        if l1 <= node.data[0] <= l2:
             self.linked_list.insert(node.data)
         if node.right:
             self._inorderTree(node.right, l1, l2)
 
     def showLevel(self, level):
         if self.root is not None:
-            if level > self._height():
-                print(f'nao ha nos com nivel: {level}')
+            if level <= self._height() and level >= 1:
+                print(f'palavra no nivel: {level}')
+                self._getTreeLevel(self.root, level)
                 return
-            print(f'palavra no nivel: {level}')
-            self._getTreeLevel(self.root, level)
-            return
-        print("arvore vazia")
+        print(f'nao ha nos com nivel: {level}')
+        return
 
     def _getTreeLevel(self, node, level):
         if node is None:
@@ -209,7 +207,6 @@ class BinarySearchTree:
                     break
 
             if found:
-
                 current = self.root
                 while current:
                     self.d_linked_list.insert_in_order(current.data)
@@ -220,21 +217,21 @@ class BinarySearchTree:
                     else:
                         break
 
-                print("palavras no caminho")
+                print("palavras no caminho:")
                 self.d_linked_list.print_list()
-                return current
+                return
 
-        print(f"palavra nao existente {value}")
-        return None
+        print(f"palavra inexistente: {value}")
+        return
 
     def print_tree(self, node):
         if self.root is None:
             print('arvore vazia')
+            return
         if node is None:
-            return node
+            return
         left_value = node.left.data if node.left is not None else "nill"
         right_value = node.right.data if node.right is not None else "nill"
-        print(f"palavra: {node.data} freq: {node.searched} fesq: {
-              left_value} fdir: {right_value}")
+        print(f"palavra: {node.data} freq: {node.searched} fesq: {left_value} fdir: {right_value}")
         self.print_tree(node.left)
         self.print_tree(node.right)
