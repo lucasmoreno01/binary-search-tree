@@ -1,15 +1,15 @@
 
-# versão do python: 3.12.3
+# versão do Python: 3.12.3
 
 from binary_search_tree import BinarySearchTree
 
 bst = BinarySearchTree()
 
-while True:
+cmd = " "
+
+while cmd != "e" :
     cmd = str(input())
     
-    if cmd == "e":
-        break
 
     match cmd:
         case "i":
@@ -42,8 +42,7 @@ while True:
         case "p":
             bst.print_tree(bst.root)  
         
-        case _:
-            print("comando invalido")
+  
 
 
 
