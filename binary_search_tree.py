@@ -136,10 +136,10 @@ class BinarySearchTree:
 
     def showInorderTree(self, l1, l2):
         self.linked_list.head = None
+        print('palavras em ordem:')
         if self.root is not None:
             self._inorderTree(self.root, l1, l2)
             if self.linked_list.head is not None:
-                print('palavras em ordem:')
                 self.linked_list.print_list()
                 return
             else:
@@ -230,8 +230,8 @@ class BinarySearchTree:
             return
         if node is None:
             return
-        left_value = node.left.data if node.left is not None else "nill"
-        right_value = node.right.data if node.right is not None else "nill"
+        left_value = node.left.data if node.left is not None else "nil"
+        right_value = node.right.data if node.right is not None else "nil"
         print(f"palavra: {node.data} freq: {node.searched} fesq: {left_value} fdir: {right_value}")
         self.print_tree(node.left)
         self.print_tree(node.right)
